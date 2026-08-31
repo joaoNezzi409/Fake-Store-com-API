@@ -6,9 +6,12 @@
     "expo": "~57.0.18",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
-    "react-native": "0.86.3"
+    "react-native": "0.86.3",
+    "react-native-safe-area-context": "^5.9.1",
+    "styled-components": "^6.5.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.11",
     "@types/react": "~19.2.2",
     "typescript": "~6.0.3"
   },
