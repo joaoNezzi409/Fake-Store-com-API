@@ -1,30 +1,37 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+
 import {
   ActivityIndicator,
   FlatList,
 } from 'react-native';
 
 import {
-  ScreenContainer,
-  Header,
-  ScreenTitle,
-  SearchInput,
-  CategoryChip,
-  CategoryText,
-  ProductCard,
-  ProductImage,
-  ProductInfo,
-  ProductTitle,
-  ProductPrice,
-  ProductRating,
   BottomBar,
   BottomBarButton,
   BottomBarText,
-  StateContainer,
-  StateText,
+  CategoryChip,
+  CategoryList,
+  CategoryText,
+  Header,
+  ProductCard,
+  ProductGrid,
+  ProductImage,
+  ProductInfo,
+  ProductPrice,
+  ProductRating,
+  ProductTitle,
   RetryButton,
   RetryButtonText,
-} from './styles';
+  ScreenContainer,
+  ScreenTitle,
+  SearchInput,
+  StateContainer,
+  StateText,
+} from './styled';
 
 export interface Product {
   id: number;
@@ -50,35 +57,50 @@ export default function Home({
   onOpenCart,
   cartItemsCount,
 }: HomeProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [products, setProducts] =
+    useState<Product[]>([]);
 
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('all');
+  const [categories, setCategories] =
+    useState<string[]>([]);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [reload, setReload] = useState(0);
+  const [search, setSearch] =
+    useState('');
+
+  const [category, setCategory] =
+    useState('all');
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState('');
+
+  const [reload, setReload] =
+    useState(0);
 
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
-        setError(false);
+        setError('');
 
-        const productsResponse = await fetch(
-          'https://fakestoreapi.com/products'
-        );
+        const productsResponse =
+          await fetch(
+            'https://fakestoreapi.com/products'
+          );
 
-        const categoriesResponse = await fetch(
-          'https://fakestoreapi.com/products/categories'
-        );
+        const categoriesResponse =
+          await fetch(
+            'https://fakestoreapi.com/products/categories'
+          );
 
         if (
           !productsResponse.ok ||
           !categoriesResponse.ok
         ) {
-          throw new Error('Erro ao carregar os dados');
+          throw new Error(
+            'Erro ao carregar os dados.'
+          );
         }
 
         const productsData: Product[] =
@@ -90,7 +112,9 @@ export default function Home({
         setProducts(productsData);
         setCategories(categoriesData);
       } catch (error) {
-        setError(true);
+        setError(
+          'Não foi possível carregar os produtos.'
+        );
       } finally {
         setLoading(false);
       }
@@ -101,26 +125,70 @@ export default function Home({
 
   const filteredProducts = useMemo(() => {
     return products
-      .filter((product) => {
-        return (
+      .filter(
+        (product) =>
           category === 'all' ||
           product.category === category
-        );
-      })
-      .filter((product) => {
-        return product.title
+      )
+      .filter((product) =>
+        product.title
           .toLowerCase()
           .includes(
             search.trim().toLowerCase()
-          );
-      });
-  }, [products, category, search]);
+          )
+      );
+  }, [
+    products,
+    category,
+    search,
+  ]);
+
+  function renderProduct({
+    item,
+  }: {
+    item: Product;
+  }) {
+    return (
+      <ProductCard
+        onPress={() =>
+          onOpenProduct(item)
+        }
+      >
+        <ProductImage
+          source={{
+            uri: item.image,
+          }}
+          resizeMode="contain"
+        />
+
+        <ProductInfo>
+          <ProductTitle numberOfLines={2}>
+            {item.title}
+          </ProductTitle>
+
+          <ProductPrice>
+            R${' '}
+            {item.price
+              .toFixed(2)
+              .replace('.', ',')}
+          </ProductPrice>
+
+          <ProductRating>
+            ★ {item.rating.rate} (
+            {item.rating.count})
+          </ProductRating>
+        </ProductInfo>
+      </ProductCard>
+    );
+  }
 
   if (loading) {
     return (
       <ScreenContainer>
         <StateContainer>
-          <ActivityIndicator size="large" />
+          <ActivityIndicator
+            size="large"
+          />
 
           <StateText>
             Carregando produtos...
@@ -135,12 +203,14 @@ export default function Home({
       <ScreenContainer>
         <StateContainer>
           <StateText>
-            Não foi possível carregar os produtos.
+            {error}
           </StateText>
 
           <RetryButton
             onPress={() =>
-              setReload((value) => value + 1)
+              setReload(
+                (value) => value + 1
+              )
             }
           >
             <RetryButtonText>
@@ -166,18 +236,31 @@ export default function Home({
           onChangeText={setSearch}
         />
 
-        <FlatList
+        <CategoryList
           horizontal
-          data={['all', ...categories]}
+          showsHorizontalScrollIndicator={
+            false
+          }
+          data={[
+            'all',
+            ...categories,
+          ]}
           keyExtractor={(item) => item}
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
+          renderItem={({
+            item,
+          }) => (
             <CategoryChip
-              active={category === item}
-              onPress={() => setCategory(item)}
+              active={
+                category === item
+              }
+              onPress={() =>
+                setCategory(item)
+              }
             >
               <CategoryText
-                active={category === item}
+                active={
+                  category === item
+                }
               >
                 {item === 'all'
                   ? 'Todos'
@@ -188,50 +271,26 @@ export default function Home({
         />
       </Header>
 
-      <FlatList
+      <ProductGrid
         data={filteredProducts}
         numColumns={2}
         keyExtractor={(item) =>
           String(item.id)
         }
+        renderItem={
+          renderProduct
+        }
         columnWrapperStyle={{
-          justifyContent: 'space-between',
+          justifyContent:
+            'space-between',
         }}
         contentContainerStyle={{
           padding: 12,
           paddingBottom: 20,
         }}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <ProductCard
-            onPress={() =>
-              onOpenProduct(item)
-            }
-          >
-            <ProductImage
-              source={{ uri: item.image }}
-              resizeMode="contain"
-            />
-
-            <ProductInfo>
-              <ProductTitle numberOfLines={2}>
-                {item.title}
-              </ProductTitle>
-
-              <ProductPrice>
-                R${' '}
-                {item.price
-                  .toFixed(2)
-                  .replace('.', ',')}
-              </ProductPrice>
-
-              <ProductRating>
-                ★ {item.rating.rate} (
-                {item.rating.count})
-              </ProductRating>
-            </ProductInfo>
-          </ProductCard>
-        )}
+        showsVerticalScrollIndicator={
+          false
+        }
         ListEmptyComponent={
           <StateContainer>
             <StateText>

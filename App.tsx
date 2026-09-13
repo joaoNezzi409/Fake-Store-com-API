@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import Home, { Product, } from './src/screens/Home';
+import Home, {
+  Product,
+} from './src/screens/Home';
 
 import Details from './src/screens/Details';
 
-import Cart, { CartProduct, } from './src/screens/Cart';
+import Cart, {
+  CartProduct,
+} from './src/screens/Cart';
+
+type Screen =
+  | 'home'
+  | 'details'
+  | 'cart';
 
 export default function App() {
   const [screen, setScreen] =
-    useState<'home' | 'details' | 'cart'>(
-      'home'
-    );
+    useState<Screen>('home');
 
   const [selectedProduct, setSelectedProduct] =
     useState<Product | null>(null);

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, {
+  useState,
+} from 'react';
 
 import { Product } from '../Home';
 
@@ -23,7 +25,7 @@ import {
   AddToCartBar,
   AddToCartButton,
   AddToCartText,
-} from './styles';
+} from './styled';
 
 interface DetailsProps {
   product: Product;
@@ -39,27 +41,38 @@ export default function Details({
   onBack,
   onAddToCart,
 }: DetailsProps) {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] =
+    useState(1);
 
   function decreaseQuantity() {
     if (quantity > 1) {
-      setQuantity(quantity - 1);
+      setQuantity(
+        quantity - 1
+      );
     }
   }
 
   function increaseQuantity() {
-    setQuantity(quantity + 1);
+    setQuantity(
+      quantity + 1
+    );
   }
 
   function handleAddToCart() {
-    onAddToCart(product, quantity);
+    onAddToCart(
+      product,
+      quantity
+    );
+
     onBack();
   }
 
   return (
     <ScreenContainer>
       <TopBar>
-        <BackButton onPress={onBack}>
+        <BackButton
+          onPress={onBack}
+        >
           <BackButtonText>
             ‹
           </BackButtonText>
@@ -71,13 +84,17 @@ export default function Details({
       </TopBar>
 
       <Content
+        showsVerticalScrollIndicator={
+          false
+        }
         contentContainerStyle={{
           paddingBottom: 20,
         }}
-        showsVerticalScrollIndicator={false}
       >
         <DetailImage
-          source={{ uri: product.image }}
+          source={{
+            uri: product.image,
+          }}
           resizeMode="contain"
         />
 
@@ -110,7 +127,9 @@ export default function Details({
 
       <QuantityContainer>
         <StepperButton
-          onPress={decreaseQuantity}
+          onPress={
+            decreaseQuantity
+          }
         >
           <StepperText>
             −
@@ -122,7 +141,9 @@ export default function Details({
         </QuantityValue>
 
         <StepperButton
-          onPress={increaseQuantity}
+          onPress={
+            increaseQuantity
+          }
         >
           <StepperText>
             +
@@ -132,7 +153,9 @@ export default function Details({
 
       <AddToCartBar>
         <AddToCartButton
-          onPress={handleAddToCart}
+          onPress={
+            handleAddToCart
+          }
         >
           <AddToCartText>
             Adicionar ao carrinho

@@ -31,9 +31,12 @@ import {
   CheckoutText,
   EmptyContainer,
   EmptyText,
-} from './styles';
+} from './styled';
 
-export interface CartProduct extends Product {
+const CartList = FlatList;
+
+export interface CartProduct
+  extends Product {
   quantity: number;
 }
 
@@ -52,21 +55,29 @@ export default function Cart({
   onDecrease,
   onRemove,
 }: CartProps) {
-  const subtotal = items.reduce(
-    (sum, item) =>
-      sum + item.price * item.quantity,
-    0
-  );
+  const subtotal =
+    items.reduce(
+      (sum, item) =>
+        sum +
+        item.price *
+          item.quantity,
+      0
+    );
 
   const shipping =
-    items.length > 0 ? 12 : 0;
+    items.length > 0
+      ? 12
+      : 0;
 
-  const total = subtotal + shipping;
+  const total =
+    subtotal + shipping;
 
   return (
     <ScreenContainer>
       <TopBar>
-        <BackButton onPress={onBack}>
+        <BackButton
+          onPress={onBack}
+        >
           <BackButtonText>
             ‹
           </BackButtonText>
@@ -85,7 +96,7 @@ export default function Cart({
         </EmptyContainer>
       ) : (
         <>
-          <FlatList
+          <CartList
             data={items}
             keyExtractor={(item) =>
               String(item.id)
@@ -94,7 +105,14 @@ export default function Cart({
               padding: 16,
               paddingBottom: 20,
             }}
-            renderItem={({ item }) => (
+            showsVerticalScrollIndicator={
+              false
+            }
+            renderItem={({
+              item,
+            }: {
+              item: CartProduct;
+            }) => (
               <ItemContainer>
                 <ItemImage
                   source={{
@@ -104,7 +122,9 @@ export default function Cart({
                 />
 
                 <ItemInfo>
-                  <ItemTitle numberOfLines={2}>
+                  <ItemTitle
+                    numberOfLines={2}
+                  >
                     {item.title}
                   </ItemTitle>
 
@@ -112,13 +132,18 @@ export default function Cart({
                     R${' '}
                     {item.price
                       .toFixed(2)
-                      .replace('.', ',')}
+                      .replace(
+                        '.',
+                        ','
+                      )}
                   </ItemPrice>
 
                   <QuantityContainer>
                     <StepperButton
                       onPress={() =>
-                        onDecrease(item.id)
+                        onDecrease(
+                          item.id
+                        )
                       }
                     >
                       <StepperText>
@@ -132,7 +157,9 @@ export default function Cart({
 
                     <StepperButton
                       onPress={() =>
-                        onIncrease(item.id)
+                        onIncrease(
+                          item.id
+                        )
                       }
                     >
                       <StepperText>
@@ -143,7 +170,9 @@ export default function Cart({
 
                   <RemoveButton
                     onPress={() =>
-                      onRemove(item.id)
+                      onRemove(
+                        item.id
+                      )
                     }
                   >
                     <RemoveText>
@@ -165,7 +194,10 @@ export default function Cart({
                 R${' '}
                 {subtotal
                   .toFixed(2)
-                  .replace('.', ',')}
+                  .replace(
+                    '.',
+                    ','
+                  )}
               </SummaryValue>
             </SummaryRow>
 
@@ -178,7 +210,10 @@ export default function Cart({
                 R${' '}
                 {shipping
                   .toFixed(2)
-                  .replace('.', ',')}
+                  .replace(
+                    '.',
+                    ','
+                  )}
               </SummaryValue>
             </SummaryRow>
 
@@ -191,7 +226,10 @@ export default function Cart({
                 R${' '}
                 {total
                   .toFixed(2)
-                  .replace('.', ',')}
+                  .replace(
+                    '.',
+                    ','
+                  )}
               </TotalValue>
             </TotalRow>
 
