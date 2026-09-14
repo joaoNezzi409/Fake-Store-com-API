@@ -25,5 +25,5 @@ https://fakestoreapi.com/
 
 - git clone https://github.com/joaoNezzi409/Trabalho-Fake-Store.git
 - npm install
-- npm start
+- npm run start
 
