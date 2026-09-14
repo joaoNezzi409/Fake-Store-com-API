@@ -23,7 +23,7 @@ https://fakestoreapi.com/
 
 ## Como executar o projeto 
 
-- git clone https://github.com/joaoNezzi409/Fake-Store-com-API.git
+- git clone https://github.com/joaoNezzi409/Trabalho-Fake-Store.git
 - npm install
 - npm start
 
